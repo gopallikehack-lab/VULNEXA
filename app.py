@@ -69,7 +69,7 @@ HTML_TEMPLATE = """
         {% if result %}
             <div class="result-box">
                 <h3>Scan Results for: {{ target }}</h3>
-                <p style="color: #ff4d4d; font-weight: bold;">🔴 {{ result | safe }}</p>
+               <p style="color: #ff4d4d; font-weight: bold; font-size: 14px; white-space: nowrap;">🔴 {{ result | safe }}</p>
             </div>
         {% endif %}
         
@@ -122,7 +122,7 @@ def home():
 
             if missing:
                 result = "Vulnerability Found: Missing Security Headers (Severity: Medium).<br><br><strong>Details:</strong><br>"
-                result += "<br>".join([f" • Missing: {m}" for m in missing])
+                result += "<br>".join([f" • Missing: {m.split(' ')[0]}" for m in missing])
             else:
                 result = "🟢 No missing basic security headers found."
                 
