@@ -121,8 +121,8 @@ def home():
                     missing.append(f"{header} ({description})")
                     
             if missing:
-                result = "Vulnerability Found: Missing Security Headers (Severity: Medium).<br>"
-                result += "<br>".join([f" - Missing: {m}" for m in missing])
+                result = "Vulnerability Found: Missing Security Headers (Severity: Medium). Details: "
+                result += " | ".join([f"Missing {m}" for m in missing])
             else:
                 result = "🟢 No missing basic security headers found."
                 
