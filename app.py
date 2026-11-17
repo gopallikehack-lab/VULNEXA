@@ -69,17 +69,15 @@ HTML_TEMPLATE = """
     <div class="container">
         <h1>🛡️ VULNEXA Scanner</h1>
         <p>Welcome, Admin. Enter an authorized target URL.</p>
-        
-        <form method="POST">
-            <input type="text" name="url" placeholder="https://example.com" required>
-            <button type="submit">Start Scan</button>
-        </form>
-
+       
         {% if result %}
             <div class="result-box">
                 <h3>Scan Report for: {{ target }}</h3>
                 <p style="color: #ff4d4d; font-weight: bold;">🔴 {{ result }}</p>
-                
+                <form method="POST" id="scanForm">
+                   <input type="text" name="url" placeholder="https://example.com" required>
+                   <button type="submit" id="scanBtn">Start Scan</button>
+                </form>
                 {% if vulnerabilities %}
                 <table>
                     <tr>
@@ -102,10 +100,19 @@ HTML_TEMPLATE = """
                 {% endif %}
             </div>
         {% endif %}
-        
         <br><br>
         <a href="/logout"><button class="logout-btn">Logout</button></a>
     </div>
+
+    <script>
+        document.getElementById('scanForm').addEventListener('submit', function() {
+            var btn = document.getElementById('scanBtn');
+            btn.innerHTML = "⏳ Scanning..."; 
+            btn.style.backgroundColor = "#ffd633"; 
+            btn.style.color = "black";
+            btn.disabled = true; 
+        });
+    </script>
 </body>
 </html>
 """
