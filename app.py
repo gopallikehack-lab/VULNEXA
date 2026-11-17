@@ -7,8 +7,6 @@ app = Flask(__name__)
 
 # --- SECURITY & SESSION CONFIGURATION ---
 app.secret_key = os.environ.get("SECRET_KEY", "vulnexa_dev_key")
-# Expire the login session after 1 hour of inactivity
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=1)
 
 VULNEXA_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123") 
 
@@ -152,7 +150,6 @@ def login():
     error = None
     if request.method == 'POST':
         if request.form['password'] == VULNEXA_PASSWORD:
-            session.permanent = True # Apply the 1-hour timeout
             session['logged_in'] = True
             return redirect(url_for('home'))
         else:
