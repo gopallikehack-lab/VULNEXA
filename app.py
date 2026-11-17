@@ -69,15 +69,18 @@ HTML_TEMPLATE = """
     <div class="container">
         <h1>🛡️ VULNEXA Scanner</h1>
         <p>Welcome, Admin. Enter an authorized target URL.</p>
-       
+        
+        <!-- Form with IDs for JavaScript -->
+        <form method="POST" id="scanForm">
+            <input type="text" name="url" placeholder="https://example.com" required>
+            <button type="submit" id="scanBtn">Start Scan</button>
+        </form>
+
         {% if result %}
             <div class="result-box">
                 <h3>Scan Report for: {{ target }}</h3>
                 <p style="color: #ff4d4d; font-weight: bold;">🔴 {{ result }}</p>
-                <form method="POST" id="scanForm">
-                   <input type="text" name="url" placeholder="https://example.com" required>
-                   <button type="submit" id="scanBtn">Start Scan</button>
-                </form>
+                
                 {% if vulnerabilities %}
                 <table>
                     <tr>
@@ -100,10 +103,12 @@ HTML_TEMPLATE = """
                 {% endif %}
             </div>
         {% endif %}
+        
         <br><br>
         <a href="/logout"><button class="logout-btn">Logout</button></a>
     </div>
 
+    <!-- JavaScript for the Loading Button -->
     <script>
         document.getElementById('scanForm').addEventListener('submit', function() {
             var btn = document.getElementById('scanBtn');
@@ -141,7 +146,6 @@ def home():
     if request.method == 'POST':
         target = request.form['url']
         
-        # Ensure HTTPS is used for the scan to work on Render
         if not target.startswith('http'):
             target = 'https://' + target
         elif target.startswith('http://'):
@@ -154,18 +158,17 @@ def home():
             missing = []
             vulnerabilities_data = []
             
-            # The Database of Reports and Solutions
             required_headers = {
                 'X-Frame-Options': {
-                    'desc': 'Missing protection against Clickjacking. Hackers can embed your site in an invisible frame to trick users into clicking malicious buttons.',
+                    'desc': 'Missing protection against Clickjacking attacks.',
                     'fix': 'X-Frame-Options: DENY'
                 },
                 'X-XSS-Protection': {
-                    'desc': 'Browser Cross-Site Scripting (XSS) filtering is disabled. Malicious scripts can be injected into the page.',
+                    'desc': 'Browser XSS filtering is disabled.',
                     'fix': 'X-XSS-Protection: 1; mode=block'
                 },
                 'Strict-Transport-Security': {
-                    'desc': 'HSTS is missing. The browser is not forced to use HTTPS, leaving users vulnerable to Man-in-the-Middle attacks on public Wi-Fi.',
+                    'desc': 'Forces HTTPS connections to prevent Man-in-the-Middle attacks.',
                     'fix': 'Strict-Transport-Security: max-age=31536000; includeSubDomains'
                 }
             }
